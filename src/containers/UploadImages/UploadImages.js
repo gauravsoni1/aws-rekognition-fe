@@ -1,10 +1,17 @@
 import React, { useEffect, useState, useRef } from "react";
-import { Box, Button, Container, Typography } from "@mui/material";
+import {
+  Box,
+  Button,
+  Container,
+  Typography,
+  CircularProgress,
+} from "@mui/material";
 import axios from "axios";
 import ImageListTable from "../../components/ImageListTable/ImageListTable";
 
 const UploadImages = () => {
   const [data, setData] = useState([]);
+  const [isUploading, setIsUploading] = useState(false);
   const inputFile = useRef(null);
 
   async function fetchData() {
@@ -22,6 +29,7 @@ const UploadImages = () => {
 
     let formData = new FormData();
     formData.append("file", file);
+    setIsUploading(true);
     const response = await axios.post(
       "http://localhost:5000/images",
       formData,
@@ -32,6 +40,7 @@ const UploadImages = () => {
       }
     );
     console.log(response);
+    setIsUploading(false);
     fetchData();
   };
 
@@ -50,9 +59,13 @@ const UploadImages = () => {
           style={{ display: "none" }}
           onChange={onChangeFile}
         />
-        <Button variant="contained" color="secondary" onClick={uploadFile}>
-          UPLOAD
-        </Button>
+        {isUploading ? (
+          <CircularProgress />
+        ) : (
+          <Button variant="contained" color="secondary" onClick={uploadFile}>
+            UPLOAD
+          </Button>
+        )}
       </Box>
       <Box>
         <ImageListTable></ImageListTable>

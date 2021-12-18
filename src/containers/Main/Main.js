@@ -69,22 +69,14 @@ const Main = () => {
               <ListItemText primary="Detect Faces" />
             </ListItem>
           </Link>
-          <Link to="/matchfaces" className={LinkClasses.root}>
+          <Link to="/findfaces" className={LinkClasses.root}>
             <ListItem button>
               <ListItemIcon>
                 <PeopleAlt />
               </ListItemIcon>
-              <ListItemText primary="Match Faces" />
+              <ListItemText primary="Find Faces" />
             </ListItem>
-          </Link>
-          <Link to="/ppedetection" className={LinkClasses.root}>
-            <ListItem button>
-              <ListItemIcon>
-                <Masks />
-              </ListItemIcon>
-              <ListItemText primary="PPE Detection" />
-            </ListItem>
-          </Link>
+          </Link>         
         </List>
       </Drawer>
       <Box className={mainContainerClasses.root}>

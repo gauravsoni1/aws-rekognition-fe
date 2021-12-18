@@ -10,6 +10,8 @@ import {
   TableBody,
   TableContainer,
   Paper,
+  CircularProgress,
+  Button,
 } from "@mui/material";
 import { makeStyles } from "@mui/styles";
 import ImageListTable from "../../components/ImageListTable/ImageListTable";
@@ -28,7 +30,9 @@ const DetectFaces = () => {
   const imageContainerClass = imageContainerStyles();
 
   const [selectedImage, setSelectedImage] = useState("");
+  const [selectedImageName, setSelectedImageName] = useState("");
   const [imageAttribute, setImageAttribute] = useState([]);
+  const [isUploading, setIsUploading] = useState(false);
 
   const findEmotion = (emotions) => {
     let emotion = null;
@@ -91,13 +95,29 @@ const DetectFaces = () => {
     console.log("Something", row);
     const awsImageURL = `https://python-project-gaurav.s3.amazonaws.com/${row.name}`;
     setSelectedImage(awsImageURL);
+    setSelectedImageName(row.name);
     getFaceDetails(row.name);
+  };
+
+  const indexFile = async () => {
+    setIsUploading(true);
+    await axios.post("http://localhost:5000/indexface", {
+      fileName: selectedImageName,
+    });
+    setIsUploading(false);
   };
 
   return (
     <Container maxWidth="100%">
       <Box display="flex" justifyContent="space-between" mb={3}>
         <Typography variant="h5">Detect Face</Typography>
+        {isUploading ? (
+          <CircularProgress />
+        ) : (
+          <Button variant="contained" color="secondary" onClick={indexFile}>
+            Index File
+          </Button>
+        )}
       </Box>
       <Box display="flex">
         <Box flexBasis="30%">
@@ -106,7 +126,11 @@ const DetectFaces = () => {
             display="flex"
             justifyContent="center"
           >
-            <img src={selectedImage} alt="img"></img>
+            {selectedImage ? (
+              <img src={selectedImage} alt="img"></img>
+            ) : (
+              <Typography variant="caption">Please select an image</Typography>
+            )}
           </Box>
           <TableContainer component={Paper}>
             <Table sx={{ minWidth: 650 }} aria-label="Images table">
